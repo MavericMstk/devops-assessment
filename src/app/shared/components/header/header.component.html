@@ -1,0 +1,38 @@
+
+<nav class="navbar fixed-tosp navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="#">{{title}}</a>
+	<!-- <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent" [ngbCollapse]="isNavbarCollapsed">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">Link</a>
+			</li>
+			<li  class="nav-item dropdown">
+				<div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+                    <button class="btn btn-outline-primary mr-2" id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Toggle dropdown</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                        <button class="dropdown-item">Action - 1</button>
+                        <button class="dropdown-item">Another Action</button>
+                        <button class="dropdown-item">Something else is here</button>
+                    </div>
+                
+                    <!-- <button class="btn btn-outline-success mr-2" (click)="$event.stopPropagation(); myDrop.open();">Open from outside</button>
+                    <button class="btn btn-outline-danger mr-2" (click)="$event.stopPropagation(); myDrop.close();">Close from outside</button> - ->
+                </div>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#">Disabled</a>
+			</li>
+		</ul>
+		<!-- <form class="form-inline my-2 my-lg-0">
+			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		</form> - ->
+	</div> -->
+</nav>

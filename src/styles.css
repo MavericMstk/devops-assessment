@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+.card-header {
+	cursor: pointer;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.card-header .btn-link {
+	width: 100%;
+	text-align: left;
+	text-decoration: none !important;
+	padding-left: 0px;
+	color: #999;
+}
+.card-header .btn-link:not(.collapsed) {
+	color: #000;
+}
+
+.ng-valid[required], .ng-valid.required {
+	border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form) {
+}
+
+input.ng-invalid:not(.ng-untouched) {
+    border-left: 5px solid #d4514f; /* red */
+    background-color: rgba(255, 0, 0, 0.15);
+    /* border-color: #F00; */
+}

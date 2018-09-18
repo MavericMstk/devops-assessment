@@ -3,7 +3,28 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  automationStatusMaster: [
+    'None',
+    'Partially Automated',
+    'Fully Automated'
+  ],
+  statusMaster : [
+    'No',
+    'Yes'
+  ],
+  environmentsMaster : [
+    'DEV',
+    'SIT',
+    'UAT',
+    'PREPROD',
+    'PROD',
+  ],
+  envManagedByMaster : [
+    'Mastek',
+    'Client',
+    'Third Party',
+  ]
 };
 
 /*

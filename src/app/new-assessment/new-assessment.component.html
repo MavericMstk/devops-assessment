@@ -1,0 +1,197 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3 class="my-4">New Assessment</h3>
+			<hr>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-2 mb-4">
+			<form [formGroup]="assessmentForm" (submit)="saveDetails()">
+				<ngb-accordion #accBase="ngbAccordion" activeIds="toggle-base-0" closeOthers="true" (panelChange)="$event.nextState?acc.collapseAll():'';">
+					<ngb-panel id="toggle-base-0">
+						<ng-template ngbPanelTitle>
+							<span [ngClass]="{'oi':true, 'oi-chevron-bottom': panelId == 'toggle-base-0', 'oi-chevron-right': panelId != 'toggle-base-0' }"></span> Project Details
+						</ng-template>
+						<ng-template ngbPanelContent>
+							<div class="form-group row">
+								<label for="accountName" class="col-sm-3 col-form-label">Account Name</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control form-control-sm" id="accountName" placeholder="" formControlName="accountName">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="projectName" class="col-sm-3 col-form-label">Project Name</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control form-control-sm" id="projectName" placeholder="" formControlName="projectName">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="automationStatus" class="col-sm-3 col-form-label">Automation Status</label>
+								<div class="col-sm-9">
+									<select id="automationStatus" formControlName="automationStatus" class="form-control form-control-sm" (change)="setAutomationStatus()">
+										<option>None</option>
+										<option>Fully Automated</option>
+										<option>Partially Automated</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="platform" class="col-sm-3 col-form-label">DevOps Platform</label>
+								<div class="col-sm-9">
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" formControlName="platform" id="platformOS" value="Open Source">
+										<label class="form-check-label" for="platformOS">Open Source</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="radio" formControlName="platform" id="platformMS" value="Microsoft">
+										<label class="form-check-label" for="platformMS">Microsoft</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="summary" class="col-sm-3 col-form-label">Summary</label>
+								<div class="col-sm-9">
+									<textarea formControlName="summary" class="form-control form-control-sm" id="summary" rows="3"></textarea>
+								</div>
+							</div>
+							<button class="btn btn-primary btn-sm float-right my-2" (click)="accBase.toggle('toggle-base-1'); return;">Next</button>
+						</ng-template>
+					</ngb-panel>
+					<ngb-panel id="toggle-base-1">
+						<ng-template ngbPanelTitle>
+							<span [ngClass]="{'oi':true, 'oi-chevron-bottom': panelId == 'toggle-base-1', 'oi-chevron-right': panelId != 'toggle-base-1' }"></span> Environments
+						</ng-template>
+						<ng-template ngbPanelContent>
+							<div formArrayName="environments">
+								<div [formGroupName]="envIndex" *ngFor="let env of (assessmentForm.controls['environments'].controls); let envIndex = index;">
+									<div class="form-group row">
+										<div class="col-sm-2 form-check">
+											<div class="m-3">
+												<input formControlName="applicable" class="form-check-input" type="checkbox" [id]="'applicable' + envIndex" />
+												<label class="form-check-label" [for]="'applicable' + envIndex">{{env.get('env').value}}</label>
+											</div>
+										</div>
+										<div class="col-sm-10">
+											<div class="row">
+												<div class="col-sm-12 col-md-4">
+													<label class="col-form-label" [for]="'managedBy' + envIndex">Managed By</label>
+													<select formControlName="managedBy" [id]="'managedBy' + envIndex" class="form-control form-control-sm">
+														<option>Mastek</option>
+														<option>Client</option>
+														<option>Third Party</option>
+													</select>
+												</div>
+												<div class="col-sm-12 col-md-4">
+													<label class="col-form-label" [for]="'autoDeloy' + envIndex">Auto Deploy</label>
+													<select formControlName="autoDeloy" [id]="'autoDeloy' + envIndex" class="form-control form-control-sm">
+														<option>No</option>
+														<option>Yes</option>
+													</select>
+												</div>
+												<div class="col-sm-12 col-md-4">
+													<label class="col-form-label" [for]="'remarks' + envIndex">Comments / Remarks</label>
+													<textarea formControlName="remarks" class="form-control form-control-sm" [id]="'remarks' + envIndex" rows="3"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<button class="btn btn-primary btn-sm float-right my-2" (click)="acc.toggle('toggle-0');accBase.toggle('toggle-base-1'); return;">Next</button>
+						</ng-template>
+					</ngb-panel>
+				</ngb-accordion>
+				<ngb-accordion #acc="ngbAccordion" formArrayName="assessmentPhases" closeOthers="true" (panelChange)="toggleAccordian($event);accBase.collapseAll();">
+					<ngb-panel [formGroupName]="phaseIndex" *ngFor="let assessmentPhase of assessmentPhases.controls; let phaseIndex = index;"
+					 [id]="'toggle-' + phaseIndex">
+						<ng-template ngbPanelTitle>
+							<span [ngClass]="{'oi':true, 'oi-chevron-bottom': panelId == 'toggle-' + phaseIndex, 'oi-chevron-right': panelId != 'toggle-' + phaseIndex }"></span>
+							{{assessmentPhase.get('phaseName').value}}
+						</ng-template>
+						<ng-template ngbPanelContent>
+							<div class="form-group row">
+								<label [for]="'automationStatus' + phaseIndex" class="col-sm-3 col-form-label">Automation?</label>
+								<div class="col-sm-9">
+									<select formControlName="automationStatus" [id]="'automationStatus' + phaseIndex" class="form-control form-control-sm">
+										<option>None</option>
+										<option>Fully Automated</option>
+										<option>Partially Automated</option>
+									</select>
+								</div>
+							</div>
+							<fieldset class="form-group">
+								<div class="row">
+									<legend class="col-form-label col-sm-3 pt-0">Tools</legend>
+									<div class="col-sm-9" formArrayName="assessmentPhaseTools">
+										<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;" [formGroupName]="toolIndex"
+										 class="form-check">
+											<div>
+												<input class="form-check-input" [disabled]="tool.disabled" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex" [checked]="tool.value" (change)="tool.setValue($event.target.checked ? tool.defaultValue : '')">
+												<label class="form-check-label" [for]="'toolName' + phaseIndex + toolIndex">
+													{{tool.defaultValue}}
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+							<div class="form-group row">
+								<label [for]="'assessmentPhaseOtherTools' + phaseIndex" class="col-sm-3 col-form-label">Other Tools</label>
+								<div class="col-sm-9">
+									<input formControlName="assessmentPhaseOtherTools" type="text" class="form-control form-control-sm" [id]="'assessmentPhaseOtherTools' + phaseIndex"
+									 placeholder="">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label [for]="'processes' + phaseIndex" class="col-sm-3 col-form-label">Processes / Engineering Practices</label>
+								<div class="col-sm-9">
+									<textarea formControlName="processes" class="form-control form-control-sm" [id]="'processes' + phaseIndex" rows="3"></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="'automationSatisfaction' + phaseIndex" class="col-sm-3 col-form-label">Satisfied with flow?</label>
+								<div class="col-sm-9">
+									<select formControlName="automationSatisfaction" [id]="'automationSatisfaction' + phaseIndex" class="form-control form-control-sm">
+										<option>No</option>
+										<option>Yes</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations / Issues facing</label>
+								<div class="col-sm-9">
+									<textarea formControlName="observations" class="form-control form-control-sm" [id]="'observations' + phaseIndex" rows="3"></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label [for]="'remarks' + phaseIndex" class="col-sm-3 col-form-label">Special Remarks</label>
+								<div class="col-sm-9">
+									<textarea formControlName="remarks" class="form-control form-control-sm" [id]="'remarks' + phaseIndex" rows="3"></textarea>
+								</div>
+							</div>
+						</ng-template>
+					</ngb-panel>
+				</ngb-accordion>
+				<div class="form-group row my-2" *ngIf="!assessmentForm.disabled">
+					<div class="col-sm-12">
+						<button class="btn btn-primary" type="submit">Save Details</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Error</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">{{errorMessage}}
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cross click')">Close</button>
+	</div>
+</ng-template>

@@ -5,10 +5,10 @@ import { ListAssessmentComponent } from './list-assessment/list-assessment.compo
 import { NewAssessmentComponent } from './new-assessment/new-assessment.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/new-assessment', pathMatch: 'full' },
+    { path: '', redirectTo: '/list', pathMatch: 'full' },
     { path: 'new-assessment', component: NewAssessmentComponent },
     { path: 'list', component: ListAssessmentComponent },
-    { path: 'edit/:assessmentToken', component: NewAssessmentComponent }
+    { path: ':action/:assessmentToken', component: NewAssessmentComponent },
 ];
 
 @NgModule({

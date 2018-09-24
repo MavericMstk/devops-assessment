@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { map, retry, catchError } from 'rxjs/operators';
-import { AssessmentMasterPhases, Assessment } from '../interfaces/assessment';
+import { AssessmentMasterPhase, Assessment, AssessmentList } from '../interfaces/assessment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ export class AssessmentService {
 
   constructor(private http: HttpClient) { }
 
-  getMaster(): Observable<AssessmentMasterPhases> {
-    return this.http.get<AssessmentMasterPhases>('https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1').pipe(
-      map((response: AssessmentMasterPhases) => {
+  getMaster(): Observable<AssessmentMasterPhase[]> {
+    return this.http.get<AssessmentMasterPhase[]>('http://localhost:8000/get-master').pipe(
+      map((response: AssessmentMasterPhase[]) => {
         // this.products = data;
-        response.assessmentPhases = [{
+        /* response.assessmentPhases = [{
           phaseId: 'planning_tools',
           phaseName: 'Planning Tools',
           tools: [{
@@ -39,8 +39,8 @@ export class AssessmentService {
             toolName: 'SVN',
             version: ''
           }]
-        }];
-        return response as AssessmentMasterPhases;
+        }]; */
+        return response as AssessmentMasterPhase[];
       }),
       catchError(error => {
         return throwError('Something went wrong!');
@@ -48,7 +48,35 @@ export class AssessmentService {
     );
   }
 
-  getAssessment(assessmentToken: string): Observable<Assessment> {
+  getAssessments(): Observable<AssessmentList[]> {
+    // return this.http.get<AssessmentList[]>('https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1').pipe(
+    return this.http.get<AssessmentList[]>('http://localhost:8000/list-assessments').pipe(
+      map((response: AssessmentList[]) => {
+        // tslint:disable-next-line:max-line-length
+        // response = [{ 'assessmentToken': 'sdflsd-2df3-243-kuwoer3', 'accountName': 'IPF', 'projectName': 'PIPS', 'automationStatus': 'Partically Automated', 'platform': 'Open Source', 'summary': '', 'assessmentDate': '2018-01-01 12:12:12' }, { 'assessmentToken': 'd3flsd-2df3-243-kuwoewy', 'accountName': 'MCL', 'projectName': 'MCL', 'automationStatus': 'Partically Automated', 'platform': 'Open Source', 'summary': '', 'assessmentDate': '2018-02-11 09:32:00' }];
+        return response as AssessmentList[];
+      }),
+      catchError(error => {
+        return throwError('Something went wrong!');
+      })
+    );
+  }
+
+  postAssessment(postData: Assessment): Observable<any> {
+    // return this.http.get<AssessmentList[]>('https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1').pipe(
+    return this.http.post<any>('http://localhost:8000/save-assessment', postData).pipe(
+      map((response) => {
+        // tslint:disable-next-line:max-line-length
+        // response = [{ 'assessmentToken': 'sdflsd-2df3-243-kuwoer3', 'accountName': 'IPF', 'projectName': 'PIPS', 'automationStatus': 'Partically Automated', 'platform': 'Open Source', 'summary': '', 'assessmentDate': '2018-01-01 12:12:12' }, { 'assessmentToken': 'd3flsd-2df3-243-kuwoewy', 'accountName': 'MCL', 'projectName': 'MCL', 'automationStatus': 'Partically Automated', 'platform': 'Open Source', 'summary': '', 'assessmentDate': '2018-02-11 09:32:00' }];
+        return response;
+      }),
+      catchError(error => {
+        return throwError('Something went wrong!');
+      })
+    );
+  }
+
+  getAssessmentDetails(assessmentToken: string): Observable<Assessment> {
     return this.http.get<Assessment>('https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1').pipe(
       map((response: Assessment) => {
         // tslint:disable-next-line:max-line-length

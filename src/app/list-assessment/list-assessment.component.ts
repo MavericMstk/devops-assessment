@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AssessmentService } from '../shared/services/assessment.service';
+import { AssessmentList } from 'src/app/shared/interfaces/assessment';
 
 @Component({
   selector: 'app-list-assessment',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListAssessmentComponent implements OnInit {
 
-  constructor() { }
+  assessments: AssessmentList[] = [];
+
+  constructor(private srvAssessment: AssessmentService) { }
 
   ngOnInit() {
+    this.srvAssessment.getAssessments().subscribe((assessments: AssessmentList[]) => {
+      this.assessments = assessments;
+    });
   }
 
 }

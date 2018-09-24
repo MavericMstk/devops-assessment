@@ -28,3 +28,10 @@ input.ng-invalid:not(.ng-untouched) {
     background-color: rgba(255, 0, 0, 0.15);
     /* border-color: #F00; */
 }
+.popover {
+    box-shadow: 0px 0px 15px 5px #CCC;
+}
+/* .readonly input.form-control, .readonly textarea.form-control, .readonly select.form-control {
+    border: none;
+    background-color: #EEE;
+} */

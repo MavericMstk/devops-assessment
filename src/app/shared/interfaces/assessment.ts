@@ -25,7 +25,7 @@ export interface AssessmentEnvironment {
 
 export interface Assessment {
     assessmentToken?: string;
-    accessmentDate?: string;
+    assessmentDate?: string;
     accountName: string;
     projectName: string;
     automationStatus: string;
@@ -41,6 +41,16 @@ export interface AssessmentMasterPhase {
     tools: AssessmentPhaseTool[];
 }
 
-export interface AssessmentMasterPhases {
+/* export interface AssessmentMasterPhases {
     assessmentPhases: AssessmentMasterPhase[];
+} */
+
+export interface AssessmentList {
+    assessmentToken?: string;
+    assessmentDate?: string;
+    accountName: string;
+    projectName: string;
+    automationStatus: string;
+    platform: string;
+    summary: string;
 }

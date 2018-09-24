@@ -1,12 +1,16 @@
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-sm-12">
-			<h3 class="my-4">New Assessment</h3>
+		<div class="col-md-12 col-lg-8">
+			<h3 class="my-4">{{action | titlecase }} Assessment
+				<a class="float-right btn btn-outline-dark" [routerLink]="['/']">
+					<span class="oi oi-arrow-thick-left"></span>
+				</a>
+			</h3>
 			<hr>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-2 mb-4">
+		<div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-2 mb-4" [ngClass]="{'readonly': readonlyMode}">
 			<form [formGroup]="assessmentForm" (submit)="saveDetails()">
 				<ngb-accordion #accBase="ngbAccordion" activeIds="toggle-base-0" closeOthers="true" (panelChange)="$event.nextState?acc.collapseAll():'';">
 					<ngb-panel id="toggle-base-0">
@@ -17,13 +21,13 @@
 							<div class="form-group row">
 								<label for="accountName" class="col-sm-3 col-form-label">Account Name</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control form-control-sm" id="accountName" placeholder="" formControlName="accountName">
+									<input type="text" class="form-control form-control-sm" id="accountName" placeholder="" formControlName="accountName" autocomplete="off">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="projectName" class="col-sm-3 col-form-label">Project Name</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control form-control-sm" id="projectName" placeholder="" formControlName="projectName">
+									<input type="text" class="form-control form-control-sm" id="projectName" placeholder="" formControlName="projectName" autocomplete="off">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -55,7 +59,7 @@
 									<textarea formControlName="summary" class="form-control form-control-sm" id="summary" rows="3"></textarea>
 								</div>
 							</div>
-							<button class="btn btn-primary btn-sm float-right my-2" (click)="accBase.toggle('toggle-base-1'); return;">Next</button>
+							<button class="btn btn-primary btn-sm float-right my-2" (click)="accBase.toggle('toggle-base-1'); return;" *ngIf="!assessmentForm.disabled">Next</button>
 						</ng-template>
 					</ngb-panel>
 					<ngb-panel id="toggle-base-1">
@@ -83,10 +87,11 @@
 													</select>
 												</div>
 												<div class="col-sm-12 col-md-4">
-													<label class="col-form-label" [for]="'autoDeloy' + envIndex">Auto Deploy</label>
+													<label class="col-form-label" [for]="'autoDeloy' + envIndex">Deployment Status</label>
 													<select formControlName="autoDeloy" [id]="'autoDeloy' + envIndex" class="form-control form-control-sm">
-														<option>No</option>
-														<option>Yes</option>
+														<option>Manual</option>
+														<option>Scheduled Auto Deploy</option>
+														<option>Continuous Auto Deploy</option>
 													</select>
 												</div>
 												<div class="col-sm-12 col-md-4">
@@ -98,7 +103,8 @@
 									</div>
 								</div>
 							</div>
-							<button class="btn btn-primary btn-sm float-right my-2" (click)="acc.toggle('toggle-0');accBase.toggle('toggle-base-1'); return;">Next</button>
+							<button class="btn btn-primary btn-sm float-right my-2" (click)="acc.toggle('toggle-0');accBase.toggle('toggle-base-1'); return;"
+							 *ngIf="!assessmentForm.disabled">Next</button>
 						</ng-template>
 					</ngb-panel>
 				</ngb-accordion>
@@ -127,10 +133,26 @@
 										<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;" [formGroupName]="toolIndex"
 										 class="form-check">
 											<div>
-												<input class="form-check-input" [disabled]="tool.disabled" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex" [checked]="tool.value" (change)="tool.setValue($event.target.checked ? tool.defaultValue : '')">
+												<input class="form-check-input" [disabled]="tool.disabled" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex" [checked]="tool.value"
+												 (change)="tool.setValue($event.target.checked ? tool.defaultValue : '')">
 												<label class="form-check-label" [for]="'toolName' + phaseIndex + toolIndex">
 													{{tool.defaultValue}}
 												</label>
+												<!-- &nbsp;&nbsp;&nbsp;<span class="oi oi-info" placement="right" [ngbTooltip]="tipContent" autoClose="outside" triggers="manual"  #infoTip="ngbTooltip" (click)="infoTip.toggle()"></span> -->
+												&nbsp;&nbsp;&nbsp;
+												<span class="oi oi-info" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="right"></span>
+												<ng-template #popTitle>
+													{{tool.defaultValue}}
+												</ng-template>
+												<ng-template #popContent>
+													- Lorem ipsum dolor sit amet, consectetur.
+													<br/>- Phasellus quis libero sit amet magna.
+													<br/>- Vivamus sed nisi ultricies enim dapibus dictum.
+													<br/>- Nulla luctus ipsum eget leo porttitor porttitor.
+													<br/>- Suspendisse ac neque eu tellus.
+													<br/>- Donec convallis leo sodales, efficitur.
+													<br/>- Nullam suscipit dolor id libero elementum.
+												</ng-template>
 											</div>
 										</div>
 									</div>

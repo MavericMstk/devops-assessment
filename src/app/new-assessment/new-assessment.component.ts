@@ -7,7 +7,7 @@ import { AssessmentService } from '../shared/services/assessment.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { CheckboxFormControl } from '../shared/interfaces/custom-form-controls';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-new-assessment',
@@ -27,6 +27,8 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     statusMaster = environment.statusMaster;
     automationStatusMaster = environment.automationStatusMaster;
 
+    readonlyMode = true;
+    action = 'New';
     assessmentToken: string;
     assessmentData: Assessment;
     formDisableStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -42,14 +44,24 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     });
 
     constructor(private fb: FormBuilder, private srvAssessment: AssessmentService, private cdRef: ChangeDetectorRef,
-        private modalService: NgbModal, private route: ActivatedRoute) { }
+        private modalService: NgbModal, private route: ActivatedRoute, private router: Router) { }
 
     ngOnInit() {
         this.panelId = 'toggle-base';
         // this.assessmentTools = environment.assessmentPhaseTools;
 
+        this.action = this.route.snapshot.paramMap.get('action');
+
+        if (this.action === 'edit') {
+            this.readonlyMode = false;
+        } else if (this.action === 'view') {
+            this.readonlyMode = true;
+        } else {
+            this.action = 'new';
+            this.readonlyMode = false;
+        }
+
         this.formDisableStatus.subscribe(status => {
-            console.log('status -> ' + status);
             if (status) {
                 this.assessmentForm.disable();
             } else {
@@ -61,21 +73,28 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
         this.createAssessmentPhases();
 
         const assessmentToken = this.route.snapshot.paramMap.get('assessmentToken');
-        console.log(assessmentToken);
         if (assessmentToken) {
             this.assessmentToken = assessmentToken;
         }
     }
 
+    setFormStatus(status: boolean) {
+        if (this.readonlyMode) {
+            this.formDisableStatus.next(true);
+        } else {
+            this.formDisableStatus.next(status);
+        }
+    }
+
     getAssessment(): void {
-        this.formDisableStatus.next(true);
-        this.srvAssessment.getAssessment(this.assessmentToken)
+        this.setFormStatus(true);
+        this.srvAssessment.getAssessmentDetails(this.assessmentToken)
             .subscribe(assessmentDetails => {
                 // this.parseAssessment(assessmentDetails);
                 this.assessmentData = assessmentDetails;
                 this.assessmentForm.patchValue(this.assessmentData);
                 this.prepopulateForm();
-                this.formDisableStatus.next(false);
+                this.setFormStatus(false);
             });
     }
 
@@ -103,7 +122,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     }
 
     createEnvironments() {
-        this.formDisableStatus.next(true);
+        this.setFormStatus(true);
         if (environment.environmentsMaster) {
             environment.environmentsMaster.forEach(environmentElem => {
 
@@ -122,20 +141,20 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
             this.cdRef.detectChanges();
         }
-        this.formDisableStatus.next(false);
+        this.setFormStatus(false);
     }
 
     createAssessmentPhases() {
-        this.formDisableStatus.next(true);
+        this.setFormStatus(true);
         this.srvAssessment.getMaster().subscribe(masters => {
             const defaultAutomationStatus = this.automationStatusMaster[0];
-            if (masters.assessmentPhases.length) {
-                masters.assessmentPhases.forEach((assessmentPhase, index) => {
+            if (masters.length) {
+                masters.forEach((assessmentPhase, index) => {
 
                     // Convert to tools to checkboxes
                     let assessmentPhaseTools: FormControl[] = [];
                     assessmentPhaseTools = assessmentPhase.tools.map(tool => {
-                        const chkbox = new CheckboxFormControl({ value: null, disabled: true });
+                        const chkbox = new CheckboxFormControl({ value: false, disabled: true });
                         chkbox.defaultValue = tool.toolName;
                         if (this.formDisableStatus.getValue()) {
                             chkbox.disable();
@@ -158,12 +177,12 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                     const test = this.assessmentForm.get('assessmentPhases') as FormArray;
                     test.push(phase);
                     this.cdRef.detectChanges();
-                    this.formDisableStatus.next(true);
+                    this.setFormStatus(true);
                 });
                 if (this.assessmentToken) {
                     this.getAssessment();
                 } else {
-                    this.formDisableStatus.next(false);
+                    this.setFormStatus(false);
                 }
                 this.cdRef.detectChanges();
             }
@@ -196,16 +215,22 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     saveDetails() {
         console.log(this.assessmentForm);
         if (this.assessmentForm.valid) {
-            const phases = this.assessmentForm.get('assessmentPhases') as FormArray;
-
-            // Removed unchecked tools from form
-            phases.controls.forEach(phase => {
-                const tools = phase.get('assessmentPhaseTools') as FormArray;
-                tools.controls.forEach((tool, toolIndex) => {
-                    if (!tool.value) {
-                        tools.removeAt(toolIndex);
+            const formData: Assessment = this.assessmentForm.value;
+            formData.assessmentPhases.forEach((phase, phaseIndex) => {
+                phase.assessmentPhaseTools.forEach((tool, toolIndex) => {
+                    if (!tool) {
+                        delete phase.assessmentPhaseTools[toolIndex];
                     }
                 });
+                phase.assessmentPhaseTools = phase.assessmentPhaseTools.filter(Boolean);
+            });
+            console.log(formData);
+            this.srvAssessment.postAssessment(formData).subscribe(response => {
+                if (response.status === 'success') {
+                    this.router.navigate(['/']);
+                } else {
+                    alert('Error');
+                }
             });
 
         } else {
@@ -214,7 +239,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
             this.errorMessage = 'Please provide all mandatory information.';
             this.showError();
         }
-        console.log(JSON.stringify(this.assessmentForm.value));
         return false;
     }
 

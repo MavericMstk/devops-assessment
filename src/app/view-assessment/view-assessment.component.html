@@ -1,0 +1,91 @@
+<div class="container-fluid" *ngIf="assessmentData">
+  <div class="row">
+    <div class="col-md-12 col-lg-8">
+      <h3 class="my-4">{{assessmentData.accountName}} - {{assessmentData.projectName}}
+        <a class="float-right btn btn-outline-dark" [routerLink]="['/']">
+          <span class="oi oi-arrow-thick-left"></span>
+        </a>
+      </h3>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mt-2 mb-4">
+      <div class="row">
+        <div class="col-md-4 col-sm-6">
+          <strong>Automation Status</strong>
+        </div>
+        <div class="col-md-8 col-sm-6">{{assessmentData.automationStatus}}</div>
+        <div class="col-md-4 col-sm-6">
+          <strong>Platform</strong>
+        </div>
+        <div class="col-md-8 col-sm-6">{{assessmentData.platform}}</div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <strong>Summary</strong>
+        </div>
+        <div class="col-sm-12 col-md-8">{{assessmentData.summary}}</div>
+      </div>
+    </div>
+    <div class="col-12 mt-2 mb-4">
+      <table class="table table-hover table-responsive table-bordered table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Environments</th>
+            <th scope="col">Managed By</th>
+            <th scope="col">Auto Deploy?</th>
+            <th scope="col">Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let environment of assessmentData.environments;">
+            <ng-template [ngIf]="environment.applicable">
+              <th scope="row">{{environment.env}}</th>
+              <td>{{environment.managedBy}}</td>
+              <td>{{environment.autoDeploy}}</td>
+              <td>{{environment.remarks}}</td>
+            </ng-template>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-12 mt-2 mb-4">
+      <table class="table table-hover table-responsive table-bordered table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Phases</th>
+            <th scope="col">Automation Status</th>
+            <th scope="col">Tools</th>
+            <th scope="col">Processes</th>
+            <th scope="col">Observations</th>
+            <th scope="col">Remarks</th>
+            <th scope="col">Automation Satisfaction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let phase of assessmentData.assessmentPhases;">
+            <th scope="row">{{phase.phaseName}}</th>
+            <td>{{phase.automationStatus}}</td>
+            <td>
+              <ul>
+                <li *ngFor="let tool of phase.assessmentPhaseTools;">
+                  {{tool.toolName}}
+                </li>
+              </ul>
+              <ul *ngIf="phase.assessmentPhaseOtherTools != ''">
+                <li *ngFor="let tool of phase.assessmentPhaseOtherTools.split(',');">
+                  {{tool}}
+                </li>
+              </ul>
+            </td>
+            <td><pre>{{phase.processes}}</pre></td>
+            <td><pre>{{phase.observations}}</pre></td>
+            <td><pre>{{phase.remarks}}</pre></td>
+            <td>{{phase.automationSatisfaction}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

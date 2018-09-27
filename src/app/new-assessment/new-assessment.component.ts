@@ -34,6 +34,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     formDisableStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     assessmentForm = this.fb.group({
+        assessmentToken: [''],
         accountName: ['', Validators.required],
         projectName: ['', Validators.required],
         automationStatus: ['None', Validators.required],
@@ -100,19 +101,20 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
     prepopulateForm() {
         if (this.assessmentData) {
-
+            console.log(this.assessmentForm);
             (this.assessmentForm.get('assessmentPhases') as FormArray).controls.forEach((assessmentPhase: FormGroup) => {
                 const currentPhase = this.assessmentData.assessmentPhases.find((dataAssessmentPhase: AssessmentPhase) => {
                     return dataAssessmentPhase.phaseId === assessmentPhase.get('phaseId').value;
                 });
                 if (currentPhase.phaseId) {
-                    (assessmentPhase.get('assessmentPhaseTools') as FormArray).controls.forEach((toolElem: CheckboxFormControl) => {
+                    (assessmentPhase.get('assessmentPhaseTools') as FormArray).controls.forEach((toolGroup: FormGroup) => {
                         // phaseTools.defaultValue
+                        const toolElem = toolGroup.get('toolName') as CheckboxFormControl;
                         toolElem.setValue(false);
                         toolElem.disable();
                         currentPhase.assessmentPhaseTools.forEach(dataPhaseTool => {
                             if (toolElem.defaultValue === dataPhaseTool.toolName) {
-                                toolElem.setValue(true);
+                                toolElem.setValue(dataPhaseTool.toolName);
                             }
                         });
                     });
@@ -152,14 +154,19 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                 masters.forEach((assessmentPhase, index) => {
 
                     // Convert to tools to checkboxes
-                    let assessmentPhaseTools: FormControl[] = [];
+                    let assessmentPhaseTools: FormGroup[] = [];
                     assessmentPhaseTools = assessmentPhase.tools.map(tool => {
                         const chkbox = new CheckboxFormControl({ value: false, disabled: true });
                         chkbox.defaultValue = tool.toolName;
                         if (this.formDisableStatus.getValue()) {
                             chkbox.disable();
                         }
-                        return chkbox;
+
+                        // return chkbox;
+                        return this.fb.group({
+                            toolName: chkbox,
+                            version: tool.version
+                        });
                     });
 
                     // tslint:disable-next-line:prefer-const
@@ -218,7 +225,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
             const formData: Assessment = this.assessmentForm.value;
             formData.assessmentPhases.forEach((phase, phaseIndex) => {
                 phase.assessmentPhaseTools.forEach((tool, toolIndex) => {
-                    if (!tool) {
+                    if (!tool.toolName) {
                         delete phase.assessmentPhaseTools[toolIndex];
                     }
                 });

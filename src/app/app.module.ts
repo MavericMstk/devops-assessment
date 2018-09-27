@@ -7,12 +7,14 @@ import { NewAssessmentComponent } from './new-assessment/new-assessment.componen
 import { AppRoutingModule } from './/app-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ListAssessmentComponent } from './list-assessment/list-assessment.component';
+import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NewAssessmentComponent,
-        ListAssessmentComponent
+        ListAssessmentComponent,
+        ViewAssessmentComponent
     ],
     imports: [
         BrowserModule,

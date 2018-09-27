@@ -59,7 +59,7 @@
 									<textarea formControlName="summary" class="form-control form-control-sm" id="summary" rows="3"></textarea>
 								</div>
 							</div>
-							<button class="btn btn-primary btn-sm float-right my-2" (click)="accBase.toggle('toggle-base-1'); return;" *ngIf="!assessmentForm.disabled">Next</button>
+							<!-- <button class="btn btn-primary btn-sm float-right my-2" (click)="accBase.toggle('toggle-base-1'); return;" *ngIf="!assessmentForm.disabled">Next</button> -->
 						</ng-template>
 					</ngb-panel>
 					<ngb-panel id="toggle-base-1">
@@ -103,8 +103,8 @@
 									</div>
 								</div>
 							</div>
-							<button class="btn btn-primary btn-sm float-right my-2" (click)="acc.toggle('toggle-0');accBase.toggle('toggle-base-1'); return;"
-							 *ngIf="!assessmentForm.disabled">Next</button>
+							<!-- <button class="btn btn-primary btn-sm float-right my-2" (click)="acc.toggle('toggle-0');accBase.toggle('toggle-base-1'); return;"
+							 *ngIf="!assessmentForm.disabled">Next</button> -->
 						</ng-template>
 					</ngb-panel>
 				</ngb-accordion>
@@ -129,20 +129,20 @@
 							<fieldset class="form-group">
 								<div class="row">
 									<legend class="col-form-label col-sm-3 pt-0">Tools</legend>
-									<div class="col-sm-9" formArrayName="assessmentPhaseTools">
-										<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;" [formGroupName]="toolIndex"
+									<div formArrayName="assessmentPhaseTools" class="col-sm-9">
+										<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;"
 										 class="form-check">
-											<div>
-												<input class="form-check-input" [disabled]="tool.disabled" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex" [checked]="tool.value"
-												 (change)="tool.setValue($event.target.checked ? tool.defaultValue : '')">
+											<div [formGroupName]="toolIndex">
+												<input [checked]="tool.get('toolName').value" class="form-check-input" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex"
+												 (change)="tool.get('toolName').setValue($event.target.checked ? tool.get('toolName').defaultValue : '')">
 												<label class="form-check-label" [for]="'toolName' + phaseIndex + toolIndex">
-													{{tool.defaultValue}}
+													{{tool.get('toolName').defaultValue}}
 												</label>
 												<!-- &nbsp;&nbsp;&nbsp;<span class="oi oi-info" placement="right" [ngbTooltip]="tipContent" autoClose="outside" triggers="manual"  #infoTip="ngbTooltip" (click)="infoTip.toggle()"></span> -->
 												&nbsp;&nbsp;&nbsp;
 												<span class="oi oi-info" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="right"></span>
 												<ng-template #popTitle>
-													{{tool.defaultValue}}
+													{{tool.get('toolName').defaultValue}}
 												</ng-template>
 												<ng-template #popContent>
 													- Lorem ipsum dolor sit amet, consectetur.
@@ -181,9 +181,15 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations / Issues facing</label>
+								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations</label>
 								<div class="col-sm-9">
 									<textarea formControlName="observations" class="form-control form-control-sm" [id]="'observations' + phaseIndex" rows="3"></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label [for]="'reasons' + phaseIndex" class="col-sm-3 col-form-label">Reasons</label>
+								<div class="col-sm-9">
+									<textarea  class="form-control form-control-sm" [id]="'reasons' + phaseIndex" rows="3"></textarea>
 								</div>
 							</div>
 							<div class="form-group row">

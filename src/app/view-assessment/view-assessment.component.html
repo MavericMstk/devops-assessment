@@ -59,6 +59,7 @@
             <th scope="col">Tools</th>
             <th scope="col">Processes</th>
             <th scope="col">Observations</th>
+            <th scope="col">Pain Areas</th>
             <th scope="col">Remarks</th>
             <th scope="col">Automation Satisfaction</th>
           </tr>
@@ -79,9 +80,18 @@
                 </li>
               </ul>
             </td>
-            <td><pre>{{phase.processes}}</pre></td>
-            <td><pre>{{phase.observations}}</pre></td>
-            <td><pre>{{phase.remarks}}</pre></td>
+            <td>
+              <pre>{{phase.processes}}</pre>
+            </td>
+            <td>
+              <pre>{{phase.observations}}</pre>
+            </td>
+            <td>
+              <pre>{{phase.reasons}}</pre>
+            </td>
+            <td>
+              <pre>{{phase.remarks}}</pre>
+            </td>
             <td>{{phase.automationSatisfaction}}</td>
           </tr>
         </tbody>
@@ -89,3 +99,4 @@
     </div>
   </div>
 </div>
+<app-recommendation></app-recommendation>

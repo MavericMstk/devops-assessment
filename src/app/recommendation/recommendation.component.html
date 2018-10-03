@@ -1,0 +1,40 @@
+<div class="container-fluid" *ngIf="formRecommendation">
+  <div class="row">
+    <div class="col-md-12 col-lg-8">
+      <h3 class="my-4">Recommendations
+        <a class="float-right btn btn-outline-dark" (click)="addRecommendation()">
+          <span class="oi oi-plus"></span>
+        </a>
+      </h3>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-8 mt-2 mb-4" [formGroup]="formRecommendation">
+      <div formArrayName="recommendations">
+        <div class="form-group row" [formGroupName]="recIndex" *ngFor="let recommendation of (formRecommendation.controls['recommendations'].controls); let recIndex = index;">
+          <label class="col-sm-1 col-form-label text-center"><strong>{{recIndex + 1}}.</strong></label>
+          <div class="col-sm-3">
+            <textarea formControlName="title" class="form-control form-control-sm" placeholder="Title" rows="3"></textarea>
+          </div>
+          <div class="col-sm-7">
+            <textarea formControlName="description" class="form-control form-control-sm" placeholder="Description" rows="3"></textarea>
+          </div>
+          <div class="col-sm-1 text-right">
+            <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="removeRecommendation(recIndex)"><span class="oi oi-trash"></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-2">
+    <div class="col-12 col-lg-8 text-right">
+        <a class="btn btn-outline-dark mr-1" (click)="addRecommendation()">
+          <span class="oi oi-plus"></span>
+        </a>
+        <a class="btn btn-outline-success mr-1" (click)="saveRecommendations()">
+            <span class="oi oi-check"></span> Save
+        </a>
+    </div>
+  </div>
+</div>

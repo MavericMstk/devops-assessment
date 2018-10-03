@@ -11,6 +11,7 @@ export interface AssessmentPhase {
     processes: string;
     automationSatisfaction: string;
     observations: string;
+    reasons: string;
     specialRemarks: string;
     assessmentPhaseTools: AssessmentPhaseTool[];
     assessmentPhaseOtherTools: string;
@@ -22,6 +23,10 @@ export interface AssessmentEnvironment {
     autoDeloy: string;
     remarks: string;
 }
+export interface AssessmentRecommedation {
+    title: string;
+    description: string;
+}
 
 export interface Assessment {
     assessmentToken?: string;
@@ -32,6 +37,7 @@ export interface Assessment {
     platform: string;
     summary: string;
     environments: AssessmentEnvironment[];
+    recommendations: AssessmentRecommedation[];
     assessmentPhases: AssessmentPhase[];
 }
 

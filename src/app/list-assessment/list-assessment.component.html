@@ -31,9 +31,10 @@
               <td>{{assessment.automationStatus}}</td>
               <td>{{assessment.platform}}</td>
               <td>
-                <a class="btn btn-sm btn-outline-dark" [routerLink]="['/edit/' + assessment.assessmentToken]"><span class="oi oi-pencil"></span></a> 
-                <a class="btn btn-sm btn-outline-dark mx-lg-1" [routerLink]="['/view/' + assessment.assessmentToken]"><span class="oi oi-eye"></span></a>
-                <a class="btn btn-sm btn-outline-danger"><span class="oi oi-trash"></span></a> 
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/edit/' + assessment.assessmentToken]"><span class="oi oi-pencil"></span></a> 
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/view/' + assessment.assessmentToken]"><span class="oi oi-eye"></span></a>
+                <a class="btn btn-sm btn-outline-dark mr-lg-1"><span class="oi oi-list"></span></a>
+                <a class="btn btn-sm btn-outline-danger mr-lg-1"><span class="oi oi-trash"></span></a>
               </td>
             </tr>
             <tr *ngIf="!assessments.length">

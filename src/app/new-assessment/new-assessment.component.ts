@@ -177,6 +177,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                         processes: '',
                         automationSatisfaction: 'No',
                         observations: '',
+                        reasons: '',
                         remarks: '',
                         assessmentPhaseTools: this.fb.array(assessmentPhaseTools),
                         assessmentPhaseOtherTools: ''

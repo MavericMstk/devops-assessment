@@ -21,7 +21,7 @@
             <textarea formControlName="description" class="form-control form-control-sm" placeholder="Description" rows="3"></textarea>
           </div>
           <div class="col-sm-1 text-right">
-            <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="removeRecommendation(recIndex)"><span class="oi oi-trash"></span></a>
+            <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="removeRecommendation(recIndex)" *ngIf="formRecommendation.controls['recommendations'].controls.length > 1" ><span class="oi oi-trash"></span></a>
           </div>
         </div>
       </div>

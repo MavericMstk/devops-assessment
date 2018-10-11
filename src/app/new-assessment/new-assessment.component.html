@@ -10,7 +10,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-2 mb-4" [ngClass]="{'readonly': readonlyMode}">
+		<div class="col-12 col-lg-8 mt-2 mb-4" [ngClass]="{'readonly': readonlyMode}">
 			<form [formGroup]="assessmentForm" (submit)="saveDetails()">
 				<ngb-accordion #accBase="ngbAccordion" activeIds="toggle-base-0" closeOthers="true" (panelChange)="$event.nextState?acc.collapseAll():'';">
 					<ngb-panel id="toggle-base-0">
@@ -30,7 +30,7 @@
 									<input type="text" class="form-control form-control-sm" id="projectName" placeholder="" formControlName="projectName" autocomplete="off">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="automationStatus" class="col-sm-3 col-form-label">Automation Status</label>
 								<div class="col-sm-9">
 									<select id="automationStatus" formControlName="automationStatus" class="form-control form-control-sm" (change)="setAutomationStatus()">
@@ -39,9 +39,9 @@
 										<option>Partially Automated</option>
 									</select>
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
-								<label for="platform" class="col-sm-3 col-form-label">DevOps Platform</label>
+								<label for="platform" class="col-sm-3 col-form-label">Technology Platform</label>
 								<div class="col-sm-9">
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" formControlName="platform" id="platformOS" value="Open Source">
@@ -116,7 +116,7 @@
 							{{assessmentPhase.get('phaseName').value}}
 						</ng-template>
 						<ng-template ngbPanelContent>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label [for]="'automationStatus' + phaseIndex" class="col-sm-3 col-form-label">Automation?</label>
 								<div class="col-sm-9">
 									<select formControlName="automationStatus" [id]="'automationStatus' + phaseIndex" class="form-control form-control-sm">
@@ -125,7 +125,7 @@
 										<option>Partially Automated</option>
 									</select>
 								</div>
-							</div>
+							</div> -->
 							<fieldset class="form-group">
 								<div class="row">
 									<legend class="col-form-label col-sm-3 pt-0">Tools</legend>
@@ -171,7 +171,7 @@
 									<textarea formControlName="processes" class="form-control form-control-sm" [id]="'processes' + phaseIndex" rows="3"></textarea>
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label for="'automationSatisfaction' + phaseIndex" class="col-sm-3 col-form-label">Satisfied with flow?</label>
 								<div class="col-sm-9">
 									<select formControlName="automationSatisfaction" [id]="'automationSatisfaction' + phaseIndex" class="form-control form-control-sm">
@@ -179,7 +179,7 @@
 										<option>Yes</option>
 									</select>
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations</label>
 								<div class="col-sm-9">
@@ -193,7 +193,7 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label [for]="'remarks' + phaseIndex" class="col-sm-3 col-form-label">Special Remarks</label>
+								<label [for]="'remarks' + phaseIndex" class="col-sm-3 col-form-label">Recommendations</label>
 								<div class="col-sm-9">
 									<textarea formControlName="remarks" class="form-control form-control-sm" [id]="'remarks' + phaseIndex" rows="3"></textarea>
 								</div>
@@ -201,12 +201,42 @@
 						</ng-template>
 					</ngb-panel>
 				</ngb-accordion>
-				<div class="form-group row my-2" *ngIf="!assessmentForm.disabled">
-					<div class="col-sm-12">
-						<button class="btn btn-primary" type="submit">Save Details</button>
+				<div class="card my-2 bg-light">
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-sm-3">
+								<select formControlName="status" id="status" class="form-control form-control-sm">
+									<option value="Draft" selected>Draft</option>
+									<option value="Active">Active</option>
+								</select>
+							</div>
+							<div class="col-sm-3" *ngIf="!assessmentForm.disabled">
+								<button class="btn btn-primary btn-sm" type="submit">Save Details</button>
+							</div>
+						</div>
 					</div>
 				</div>
+				
 			</form>
+		</div>
+		<div [formGroup]="assessmentForm" class="col col-lg-4 mt-2 mb-4" [ngClass]="{'readonly': readonlyMode}">
+			<div class="sticky">
+				<textarea formControlName="quickNotes" class="form-control form-control-sm" placeholder="Quick Notes..." rows="3"></textarea>
+				<div class="my-2">
+					<div class="alert alert-success" role="alert" *ngIf="assessmentForm.pristine && autoSaveStatus == 'saved'" >
+						Auto-save successful
+					</div>
+					<div class="alert alert-danger" role="alert" *ngIf="autoSaveStatus == 'failed'">
+						Auto-save failed
+					</div>
+					<div class="alert alert-warning" role="alert" *ngIf="!assessmentForm.pristine">
+						Assessment modified
+					</div>
+					<div class="alert alert-warning" role="alert" *ngIf="autoSaveStatus == 'inprogress'">
+						Auto-save is in progress
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

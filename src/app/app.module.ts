@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ListAssessmentComponent } from './list-assessment/list-assessment.component';
 import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
+import { ExportAssessmentComponent } from './export-assessment/export-assessment.component';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
         NewAssessmentComponent,
         ListAssessmentComponent,
         ViewAssessmentComponent,
-        RecommendationComponent
+        RecommendationComponent,
+        ExportAssessmentComponent
     ],
     imports: [
         BrowserModule,

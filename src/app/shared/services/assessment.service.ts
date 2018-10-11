@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { map, retry, catchError } from 'rxjs/operators';
 import { AssessmentMasterPhase, Assessment, AssessmentList } from '../interfaces/assessment';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,17 @@ export class AssessmentService {
     );
   }
 
+  deleteAssessment(assessmentToken: string): Observable<any> {
+    return this.http.get<any>('http://localhost:8000/delete-assessment?id=' + assessmentToken).pipe(
+      map((response) => {
+        return response;
+      }),
+      catchError(error => {
+        return throwError('Something went wrong!');
+      })
+    );
+  }
+
   getAssessmentDetails(assessmentToken: string): Observable<Assessment> {
     return this.http.get<Assessment>('http://localhost:8000/view-assessment?id=' + assessmentToken).pipe(
       map((response: Assessment) => {
@@ -67,5 +79,28 @@ export class AssessmentService {
         return throwError('Something went wrong!');
       })
     );
+  }
+
+  exportAssessment(assessmentToken): Observable<any> {
+    return this.http.get('http://localhost:8000/export-assessment?id=' + assessmentToken, {
+      responseType: 'blob'
+    }).pipe(
+      map((response: Blob) => {
+        const options = { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation;' };
+        const filename = assessmentToken + '.pptx';
+
+        UtilsService.createAndDownloadBlobFile(response, options, filename);
+        return true;
+      }),
+      catchError(error => {
+        console.log(error);
+        return throwError('Something went wrong!');
+      })
+    );
+
+    /*
+    .catch((err) => console.log(err))
+    .map((res:Response) => res)
+    .finally( () => { }); */
   }
 }

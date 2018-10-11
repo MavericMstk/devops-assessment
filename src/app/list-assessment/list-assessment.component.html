@@ -19,28 +19,37 @@
               <th scope="col">Account Name</th>
               <th scope="col">Project Name</th>
               <th scope="col">Automation Status</th>
-              <th scope="col">Platform</th>
+              <th scope="col">Tech. Platform</th>
+              <th scope="col">Status</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let assessment of assessments; let assessmentIndex = index;">
-              <th scope="row">{{assessmentIndex + 1}}</th>
+            <tr *ngFor="let assessment of currentPage; let assessmentIndex = index;">
+              <th scope="row">{{assessmentIndex + pointer + 1}}</th>
               <td>{{assessment.accountName}}</td>
               <td>{{assessment.projectName}}</td>
               <td>{{assessment.automationStatus}}</td>
               <td>{{assessment.platform}}</td>
+              <td>{{assessment.status}}</td>
               <td>
                 <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/edit/' + assessment.assessmentToken]"><span class="oi oi-pencil"></span></a> 
                 <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/view/' + assessment.assessmentToken]"><span class="oi oi-eye"></span></a>
-                <a class="btn btn-sm btn-outline-dark mr-lg-1"><span class="oi oi-list"></span></a>
-                <a class="btn btn-sm btn-outline-danger mr-lg-1"><span class="oi oi-trash"></span></a>
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" (click)="exportAssessment(assessment.assessmentToken)"><span class="oi oi-document"></span></a>
+                <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="deleteAssessment(assessment.assessmentToken)"><span class="oi oi-trash"></span></a>
               </td>
             </tr>
             <tr *ngIf="!assessments.length">
-              <th scope="row" colspan="6">No assessments found</th>
+              <th scope="row" colspan="7">No assessments found</th>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7">
+                  <ngb-pagination [collectionSize]="assessments.length" [pageSize]="pageSize" [(page)]="page" (pageChange)="loadPage($event)"></ngb-pagination>
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

@@ -12,7 +12,7 @@ export interface AssessmentPhase {
     automationSatisfaction: string;
     observations: string;
     reasons: string;
-    specialRemarks: string;
+    remarks: string;
     assessmentPhaseTools: AssessmentPhaseTool[];
     assessmentPhaseOtherTools: string;
 }
@@ -39,6 +39,7 @@ export interface Assessment {
     environments: AssessmentEnvironment[];
     recommendations: AssessmentRecommedation[];
     assessmentPhases: AssessmentPhase[];
+    status: string;
 }
 
 export interface AssessmentMasterPhase {

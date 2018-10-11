@@ -1,0 +1,9 @@
+.sticky {
+    position: sticky;
+    width: 100%;
+    top: 10px;
+}
+.sticky textarea {
+    width: 100%;
+    height: 300px;
+}

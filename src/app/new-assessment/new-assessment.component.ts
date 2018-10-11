@@ -8,6 +8,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { CheckboxFormControl } from '../shared/interfaces/custom-form-controls';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
+import { auditTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-new-assessment',
@@ -28,6 +29,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     automationStatusMaster = environment.automationStatusMaster;
 
     readonlyMode = true;
+    autoSaveStatus = '';
     action = 'New';
     assessmentToken: string;
     assessmentData: Assessment;
@@ -40,6 +42,8 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
         automationStatus: ['None', Validators.required],
         platform: ['Open Source', Validators.required],
         summary: [''],
+        quickNotes: [''],
+        status: ['Draft'],
         environments: this.fb.array([]),
         assessmentPhases: this.fb.array([])
     });
@@ -61,6 +65,16 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
             this.action = 'new';
             this.readonlyMode = false;
         }
+
+        this.assessmentForm.valueChanges.pipe(
+            auditTime(5000)
+        ).subscribe(formData => {
+            if (!this.assessmentForm.pristine && this.assessmentForm.valid) {
+                this.autoSaveStatus = 'inprogress';
+                this.saveDetails(true);
+            }
+        });
+
 
         this.formDisableStatus.subscribe(status => {
             if (status) {
@@ -200,6 +214,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
     public toggleAccordian(props: NgbPanelChangeEvent) {
         this.panelId = (props.nextState) ? props.panelId : '';
+        window.location.hash = '#toggle-' + props.panelId;
         // props.nextState   // true === panel is toggling to an open state // false === panel is toggling to a closed state
         // props.panelId;    // the ID of the panel that was clicked
         // props.preventDefault(); // don't toggle the state of the selected panel
@@ -220,8 +235,15 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
         }
     }
 
-    saveDetails() {
+    saveDetails(autoMode = false) {
         console.log(this.assessmentForm);
+        /* if (1) {
+            console.log(this.assessmentForm.pristine);
+            this.assessmentForm.markAsPristine();
+            console.log(this.assessmentForm.pristine);
+            this.autoSaveStatus = 'saved';
+            return true;
+        } */
         if (this.assessmentForm.valid) {
             const formData: Assessment = this.assessmentForm.value;
             formData.assessmentPhases.forEach((phase, phaseIndex) => {
@@ -235,9 +257,16 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
             console.log(formData);
             this.srvAssessment.postAssessment(formData).subscribe(response => {
                 if (response.status === 'success') {
-                    this.router.navigate(['/']);
+                    if (!autoMode) {
+                        this.router.navigate(['/']);
+                    } else {
+                        this.assessmentForm.get('assessmentToken').setValue(response.token);
+                    }
+                    this.assessmentForm.markAsPristine();
+                    this.autoSaveStatus = 'saved';
                 } else {
                     alert('Error');
+                    this.autoSaveStatus = 'failed';
                 }
             });
 

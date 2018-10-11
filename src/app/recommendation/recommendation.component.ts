@@ -26,7 +26,7 @@ export class RecommendationComponent implements OnInit, OnDestroy {
 
     this.formRecommendation = this.fb.group({
       assessmentToken: [''],
-      recommendations: this.fb.array([this.createRecommendation(), this.createRecommendation()]),
+      recommendations: this.fb.array([]),
     });
 
     const assessmentToken = this.route.snapshot.paramMap.get('assessmentToken');
@@ -39,14 +39,27 @@ export class RecommendationComponent implements OnInit, OnDestroy {
 
           this.assessmentData = assessmentDetails;
 
+          const control = <FormArray>this.formRecommendation.controls['recommendations'];
+          while (control.length !== 0) {
+            control.removeAt(0);
+          }
+
           if (this.assessmentData.recommendations.length) {
-            const control = <FormArray>this.formRecommendation.controls['recommendations'];
-            while (control.length !== 0) {
-              control.removeAt(0);
-            }
             this.assessmentData.recommendations.forEach(recommendation => {
               control.push(this.createRecommendation(recommendation.title, recommendation.description));
             });
+          } else {
+            if (this.assessmentData.assessmentPhases.length) {
+              this.assessmentData.assessmentPhases.forEach(phase => {
+                console.log(phase);
+                if (phase.remarks) {
+                  control.push(this.createRecommendation('', phase.remarks));
+                }
+              });
+            }
+          }
+          if (!control.length) {
+            control.push(this.createRecommendation('', ''));
           }
         }
       });

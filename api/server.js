@@ -9,16 +9,18 @@ const uuidv1 = require('uuid/v1');
 const database = require('./Database');
 var PptxGenJS = require("pptxgenjs");
 
+require('dotenv').config();
+
 const db = new database();
 
 // Create a server with a host and port
 const server = new Hapi.Server();
 
 const connection = MySQL.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'assessment'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 });
 
 server.connection({
@@ -62,7 +64,7 @@ function getAssessmentDetails(assessmentToken) {
     return db.query(
         'SELECT assessment_id, assessment_token assessmentToken, account_name accountName, project_name projectName, automation_status automationStatus, devops_platform platform, summary, quick_notes quickNotes, assessment_date assessmentDate, status ' +
         'FROM assessment ' +
-        'WHERE assessment_token = "' + assessmentToken + '" '
+        'WHERE assessment_token = "' + assessmentToken + '" AND status <> "Deleted" '
     ).then((assessment) => {
         if (assessment.length > 0) {
             assessment = assessment[0];
@@ -266,7 +268,7 @@ server.route({
                         tools: [],
                     };
                     return db.query(
-                        'SELECT tool_name as toolName, version as version FROM phase_tool pt INNER JOIN master_tool mt on pt.tool_id = mt.tool_id WHERE pt.phase_id = "' + phase.phase_id + '" AND pt.is_active = "1" AND mt.is_active="1" '
+                        'SELECT tool_name as toolName, version as version, description FROM phase_tool pt INNER JOIN master_tool mt on pt.tool_id = mt.tool_id WHERE pt.phase_id = "' + phase.phase_id + '" AND pt.is_active = "1" AND mt.is_active="1" '
                     ).then((tools) => {
                         response.tools = tools;
                         return response;
@@ -330,7 +332,7 @@ server.route({
                         payload.assessmentToken = asstToken;
                         return updateAssessmentFields(payload, lastAssemID);
                     } else {
-                        return db.query( 'SELECT * FROM assessment WHERE assessment_token = "' + oldAsstToken + '" ' ).then(result => {
+                        return db.query( 'SELECT * FROM assessment WHERE assessment_token = "' + oldAsstToken + '" AND status <> "Deleted" ' ).then(result => {
                             if (result) {
                                 payload.assessmentToken = oldAsstToken;
                                 return updateAssessmentFields(payload, result[0].assessment_id);
@@ -382,7 +384,7 @@ server.route({
         db.connection.beginTransaction(() => {
             return db.query(
                 'SELECT * FROM assessment ' +
-                'WHERE assessment_token = "' + assessmentToken + '" '
+                'WHERE assessment_token = "' + assessmentToken + '" AND status <> "Deleted"  '
             ).then(result => {
 
                 if (result.length > 0) {
@@ -538,7 +540,6 @@ server.route({
 
             var basefilename = 'presentations/assessment_' + (request.query.id);
             pptx.save(basefilename, function(filename){
-                console.log(filename);
                 fs.stat(filename, function(stats) {
                     reply.file(filename, {
                         filename: filename, // override the filename in the Content-Disposition header

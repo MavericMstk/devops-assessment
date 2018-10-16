@@ -73,13 +73,13 @@
 										<div class="col-sm-2 form-check">
 											<div class="m-3">
 												<input formControlName="applicable" class="form-check-input" type="checkbox" [id]="'applicable' + envIndex" />
-												<label class="form-check-label" [for]="'applicable' + envIndex">{{env.get('env').value}}</label>
+												<label class="form-check-label" [for]="'applicable' + envIndex">{{env.get('env').value}}</label>&nbsp;<span class="oi oi-info" [ngbPopover]="envInfo" placement="right"></span>
 											</div>
 										</div>
 										<div class="col-sm-10">
 											<div class="row">
 												<div class="col-sm-12 col-md-4">
-													<label class="col-form-label" [for]="'managedBy' + envIndex">Managed By</label>
+													<label class="col-form-label" [for]="'managedBy' + envIndex">Managed By <span class="oi oi-info" [ngbPopover]="envManagedByInfo" placement="right"></span></label>
 													<select formControlName="managedBy" [id]="'managedBy' + envIndex" class="form-control form-control-sm">
 														<option>Mastek</option>
 														<option>Client</option>
@@ -87,15 +87,15 @@
 													</select>
 												</div>
 												<div class="col-sm-12 col-md-4">
-													<label class="col-form-label" [for]="'autoDeloy' + envIndex">Deployment Status</label>
-													<select formControlName="autoDeloy" [id]="'autoDeloy' + envIndex" class="form-control form-control-sm">
+													<label class="col-form-label" [for]="'autoDeploy' + envIndex">Deployment Status <span class="oi oi-info" [ngbPopover]="envDeploymentInfo" placement="right"></span></label>
+													<select formControlName="autoDeploy" [id]="'autoDeploy' + envIndex" class="form-control form-control-sm">
 														<option>Manual</option>
 														<option>Scheduled Auto Deploy</option>
 														<option>Continuous Auto Deploy</option>
 													</select>
 												</div>
 												<div class="col-sm-12 col-md-4">
-													<label class="col-form-label" [for]="'remarks' + envIndex">Comments / Remarks</label>
+													<label class="col-form-label" [for]="'remarks' + envIndex">Comments / Remarks <span class="oi oi-info" [ngbPopover]="envRemarksInfo" placement="right"></span></label>
 													<textarea formControlName="remarks" class="form-control form-control-sm" [id]="'remarks' + envIndex" rows="3"></textarea>
 												</div>
 											</div>
@@ -111,7 +111,7 @@
 				<ngb-accordion #acc="ngbAccordion" formArrayName="assessmentPhases" closeOthers="true" (panelChange)="toggleAccordian($event);accBase.collapseAll();">
 					<ngb-panel [formGroupName]="phaseIndex" *ngFor="let assessmentPhase of assessmentPhases.controls; let phaseIndex = index;"
 					 [id]="'toggle-' + phaseIndex">
-						<ng-template ngbPanelTitle>
+						<ng-template ngbPanelTitle role="tab" >
 							<span [ngClass]="{'oi':true, 'oi-chevron-bottom': panelId == 'toggle-' + phaseIndex, 'oi-chevron-right': panelId != 'toggle-' + phaseIndex }"></span>
 							{{assessmentPhase.get('phaseName').value}}
 						</ng-template>
@@ -128,45 +128,43 @@
 							</div> -->
 							<fieldset class="form-group">
 								<div class="row">
-									<legend class="col-form-label col-sm-3 pt-0">Tools</legend>
+									<legend class="col-form-label col-sm-3 pt-0">Tools <span class="oi oi-info" [ngbPopover]="toolsInfo" placement="right"></span></legend>
 									<div formArrayName="assessmentPhaseTools" class="col-sm-9">
-										<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;"
-										 class="form-check">
-											<div [formGroupName]="toolIndex">
-												<input [checked]="tool.get('toolName').value" class="form-check-input" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex"
-												 (change)="tool.get('toolName').setValue($event.target.checked ? tool.get('toolName').defaultValue : '')">
-												<label class="form-check-label" [for]="'toolName' + phaseIndex + toolIndex">
-													{{tool.get('toolName').defaultValue}}
-												</label>
-												<!-- &nbsp;&nbsp;&nbsp;<span class="oi oi-info" placement="right" [ngbTooltip]="tipContent" autoClose="outside" triggers="manual"  #infoTip="ngbTooltip" (click)="infoTip.toggle()"></span> -->
-												&nbsp;&nbsp;&nbsp;
-												<span class="oi oi-info" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="right"></span>
-												<ng-template #popTitle>
-													{{tool.get('toolName').defaultValue}}
-												</ng-template>
-												<ng-template #popContent>
-													- Lorem ipsum dolor sit amet, consectetur.
-													<br/>- Phasellus quis libero sit amet magna.
-													<br/>- Vivamus sed nisi ultricies enim dapibus dictum.
-													<br/>- Nulla luctus ipsum eget leo porttitor porttitor.
-													<br/>- Suspendisse ac neque eu tellus.
-													<br/>- Donec convallis leo sodales, efficitur.
-													<br/>- Nullam suscipit dolor id libero elementum.
-												</ng-template>
+										<div class="row">
+											<div *ngFor="let tool of assessmentPhase.get('assessmentPhaseTools').controls; let toolIndex = index;"
+												class="col-md-6">
+												<div class="form-check">
+													<div [formGroupName]="toolIndex">
+														<input [checked]="tool.get('toolName').value" class="form-check-input" type="checkbox" [id]="'toolName' + phaseIndex + toolIndex"
+														(change)="tool.get('toolName').setValue($event.target.checked ? tool.get('toolName').defaultValue : '')">
+														<label class="form-check-label" [for]="'toolName' + phaseIndex + toolIndex">
+															{{tool.get('toolName').defaultValue}}
+														</label>
+														<!-- &nbsp;&nbsp;&nbsp;<span class="oi oi-info" placement="right" [ngbTooltip]="tipContent" autoClose="outside" triggers="manual"  #infoTip="ngbTooltip" (click)="infoTip.toggle()"></span> -->
+														&nbsp;&nbsp;&nbsp;
+														<span class="oi oi-info" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="right"></span>
+														<ng-template #popTitle>
+															{{tool.get('toolName').defaultValue}}
+														</ng-template>
+														<ng-template #popContent>
+															<pre>{{tool.get('toolName').description}}</pre>
+														</ng-template>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</fieldset>
 							<div class="form-group row">
-								<label [for]="'assessmentPhaseOtherTools' + phaseIndex" class="col-sm-3 col-form-label">Other Tools</label>
+								<label [for]="'assessmentPhaseOtherTools' + phaseIndex" class="col-sm-3 col-form-label">Other Tools <span class="oi oi-info" [ngbPopover]="otherToolsInfo" placement="right"></span></label>
 								<div class="col-sm-9">
 									<input formControlName="assessmentPhaseOtherTools" type="text" class="form-control form-control-sm" [id]="'assessmentPhaseOtherTools' + phaseIndex"
 									 placeholder="">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label [for]="'processes' + phaseIndex" class="col-sm-3 col-form-label">Processes / Engineering Practices</label>
+								<label [for]="'processes' + phaseIndex" class="col-sm-3 col-form-label">Processes / Engineering Practices <span class="oi oi-info" [ngbPopover]="processInfo" placement="right"></span></label>
 								<div class="col-sm-9">
 									<textarea formControlName="processes" class="form-control form-control-sm" [id]="'processes' + phaseIndex" rows="3"></textarea>
 								</div>
@@ -181,19 +179,19 @@
 								</div>
 							</div> -->
 							<div class="form-group row">
-								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations</label>
+								<label [for]="'observations' + phaseIndex" class="col-sm-3 col-form-label">Observations <span class="oi oi-info" [ngbPopover]="observationsInfo" placement="right"></span></label>
 								<div class="col-sm-9">
 									<textarea formControlName="observations" class="form-control form-control-sm" [id]="'observations' + phaseIndex" rows="3"></textarea>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label [for]="'reasons' + phaseIndex" class="col-sm-3 col-form-label">Pain Areas</label>
+								<label [for]="'reasons' + phaseIndex" class="col-sm-3 col-form-label">Pain Areas <span class="oi oi-info" [ngbPopover]="painareasInfo" placement="right"></span></label>
 								<div class="col-sm-9">
 									<textarea formControlName="reasons" class="form-control form-control-sm" [id]="'reasons' + phaseIndex" rows="3"></textarea>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label [for]="'remarks' + phaseIndex" class="col-sm-3 col-form-label">Recommendations</label>
+								<label [for]="'remarks' + phaseIndex" class="col-sm-3 col-form-label">Recommendations <span class="oi oi-info" [ngbPopover]="recommendationsInfo" placement="right"></span></label>
 								<div class="col-sm-9">
 									<textarea formControlName="remarks" class="form-control form-control-sm" [id]="'remarks' + phaseIndex" rows="3"></textarea>
 								</div>
@@ -208,7 +206,7 @@
 								<select formControlName="status" id="status" class="form-control form-control-sm">
 									<option value="Draft" selected>Draft</option>
 									<option value="Active">Active</option>
-								</select>
+								</select> <span class="oi oi-info" [ngbPopover]="statusInfo" placement="right"></span>
 							</div>
 							<div class="col-sm-3" *ngIf="!assessmentForm.disabled">
 								<button class="btn btn-primary btn-sm" type="submit">Save Details</button>
@@ -221,7 +219,8 @@
 		</div>
 		<div [formGroup]="assessmentForm" class="col col-lg-4 mt-2 mb-4" [ngClass]="{'readonly': readonlyMode}">
 			<div class="sticky">
-				<textarea formControlName="quickNotes" class="form-control form-control-sm" placeholder="Quick Notes..." rows="3"></textarea>
+				<label for="quicknotes" class="col-form-label">Quick Notes <span class="oi oi-info" [ngbPopover]="quickNotesInfo" placement="right"></span></label>
+				<textarea id="quicknotes" formControlName="quickNotes" class="form-control form-control-sm" placeholder="Quick Notes..." rows="3"></textarea>
 				<div class="my-2">
 					<div class="alert alert-success" role="alert" *ngIf="assessmentForm.pristine && autoSaveStatus == 'saved'" >
 						Auto-save successful
@@ -240,6 +239,43 @@
 		</div>
 	</div>
 </div>
+<ng-template #envInfo>
+	Check this if environment is applicable for the project.
+</ng-template>
+<ng-template #envManagedByInfo>
+	Who is managing this environment? In case, the environment is managed by Third-party, enter the company name in remarks.
+</ng-template>
+<ng-template #envDeploymentInfo>
+	Select the deployment status for this environment.
+</ng-template>
+<ng-template #envRemarksInfo>
+	Enter Comments/Remarks, if any.
+</ng-template>
+<ng-template #toolsInfo>
+	Select tools which are currently used in the project. In case, tool is not available in checklist, please enter the same in 'Other Tools' below
+</ng-template>
+<ng-template #otherToolsInfo>
+	Enter tools in comma separated format which are not present in above list.
+</ng-template>
+<ng-template #processInfo>
+	Details about Processes or Engineering Practices that are currently getting followed in project.
+</ng-template>
+<ng-template #observationsInfo>
+	Enter details about any Observations that are found in the process or technology.
+</ng-template>
+<ng-template #painareasInfo>
+	Enter details about any Pain Areas or Challenges that client or team is facing in the process.
+</ng-template>
+<ng-template #recommendationsInfo>
+	In case any Recommendations to be suggested for the project.
+	These Recommendations will be copied to final Recommendations report section for further modifications.
+</ng-template>
+<ng-template #quickNotesInfo>
+	Enter quick notes here
+</ng-template>
+<ng-template #statusInfo>
+	Select status for this assessment.
+</ng-template>
 <ng-template #content let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Error</h4>

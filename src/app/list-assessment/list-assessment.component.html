@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12 col-lg-8">
       <h3 class="my-4">Recent Assessments
-        <a class="float-right btn btn-outline-dark" [routerLink]="['/new-assessment']">
+        <a class="float-right btn btn-outline-dark" [routerLink]="['/new-assessment']" title="New Assessment">
           <span class="oi oi-plus"></span>
         </a>
       </h3>
@@ -33,10 +33,10 @@
               <td>{{assessment.platform}}</td>
               <td>{{assessment.status}}</td>
               <td>
-                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/edit/' + assessment.assessmentToken]"><span class="oi oi-pencil"></span></a> 
-                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/view/' + assessment.assessmentToken]"><span class="oi oi-eye"></span></a>
-                <a class="btn btn-sm btn-outline-dark mr-lg-1" (click)="exportAssessment(assessment.assessmentToken)"><span class="oi oi-document"></span></a>
-                <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="deleteAssessment(assessment.assessmentToken)"><span class="oi oi-trash"></span></a>
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/edit/' + assessment.assessmentToken]" title="Edit"><span class="oi oi-pencil"></span></a> 
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" [routerLink]="['/view/' + assessment.assessmentToken]" title="View"><span class="oi oi-eye"></span></a>
+                <a class="btn btn-sm btn-outline-dark mr-lg-1" (click)="exportAssessment(assessment.assessmentToken)" title="Export PPT"><span class="oi oi-document"></span></a>
+                <a class="btn btn-sm btn-outline-danger mr-lg-1" (click)="deleteAssessment(assessment.assessmentToken)" title="Delete"><span class="oi oi-trash"></span></a>
               </td>
             </tr>
             <tr *ngIf="!assessments.length">

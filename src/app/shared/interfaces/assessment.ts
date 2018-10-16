@@ -2,6 +2,7 @@ export interface AssessmentPhaseTool {
     toolName: string;
     version?: string;
     type?: string;
+    description?: string;
 }
 
 export interface AssessmentPhase {
@@ -20,7 +21,7 @@ export interface AssessmentEnvironment {
     env: string;
     applicable: boolean;
     managedBy: string;
-    autoDeloy: string;
+    autoDeploy: string;
     remarks: string;
 }
 export interface AssessmentRecommedation {

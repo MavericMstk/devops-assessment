@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap/accordion/accordion';
 import { FormControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { environment } from '../../environments/environment';
@@ -9,6 +9,7 @@ import { CheckboxFormControl } from '../shared/interfaces/custom-form-controls';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { auditTime } from 'rxjs/operators';
+import { NgbAccordion } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-new-assessment',
@@ -18,6 +19,7 @@ import { auditTime } from 'rxjs/operators';
 export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
     panelId;
+    activePanelId;
     nextState;
     preventDefault;
 
@@ -47,6 +49,8 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
         environments: this.fb.array([]),
         assessmentPhases: this.fb.array([])
     });
+
+    @ViewChild('acc') accordion: NgbAccordion;
 
     constructor(private fb: FormBuilder, private srvAssessment: AssessmentService, private cdRef: ChangeDetectorRef,
         private modalService: NgbModal, private route: ActivatedRoute, private router: Router) { }
@@ -90,6 +94,17 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
         const assessmentToken = this.route.snapshot.paramMap.get('assessmentToken');
         if (assessmentToken) {
             this.assessmentToken = assessmentToken;
+        }
+    }
+
+    @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
+        console.log(event);
+        if (event.keyCode === 39 && event.altKey === true) {
+            this.accordion.expand(this.activePanelId);
+        }
+
+        if (event.keyCode === 37 && event.altKey === true) {
+            this.accordion.collapse(this.activePanelId);
         }
     }
 
@@ -147,7 +162,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                     env: environmentElem,
                     applicable: '',
                     managedBy: '',
-                    autoDeloy: '',
+                    autoDeploy: '',
                     remarks: ''
                 });
                 const test = this.assessmentForm.get('environments') as FormArray;  // . addControl(phase);
@@ -172,6 +187,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                     assessmentPhaseTools = assessmentPhase.tools.map(tool => {
                         const chkbox = new CheckboxFormControl({ value: false, disabled: true });
                         chkbox.defaultValue = tool.toolName;
+                        chkbox.description = tool.description;
                         if (this.formDisableStatus.getValue()) {
                             chkbox.disable();
                         }
@@ -213,6 +229,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
 
     public toggleAccordian(props: NgbPanelChangeEvent) {
+        this.activePanelId = props.panelId;
         this.panelId = (props.nextState) ? props.panelId : '';
         window.location.hash = '#toggle-' + props.panelId;
         // props.nextState   // true === panel is toggling to an open state // false === panel is toggling to a closed state
@@ -248,6 +265,7 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
             const formData: Assessment = this.assessmentForm.value;
             formData.assessmentPhases.forEach((phase, phaseIndex) => {
                 phase.assessmentPhaseTools.forEach((tool, toolIndex) => {
+                    tool.description = '';
                     if (!tool.toolName) {
                         delete phase.assessmentPhaseTools[toolIndex];
                     }

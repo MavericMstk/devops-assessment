@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiURL: 'http://localhost:8000/',
+  apiURL: 'http://ec2-52-56-154-12.eu-west-2.compute.amazonaws.com:9080/',
   automationStatusMaster: [
     'None',
     'Partially Automated',

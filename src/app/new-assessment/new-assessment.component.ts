@@ -98,7 +98,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     }
 
     @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
-        console.log(event);
         if (event.keyCode === 39 && event.altKey === true) {
             this.accordion.expand(this.activePanelId);
         }
@@ -130,7 +129,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
 
     prepopulateForm() {
         if (this.assessmentData) {
-            console.log(this.assessmentForm);
             (this.assessmentForm.get('assessmentPhases') as FormArray).controls.forEach((assessmentPhase: FormGroup) => {
                 const currentPhase = this.assessmentData.assessmentPhases.find((dataAssessmentPhase: AssessmentPhase) => {
                     return dataAssessmentPhase.phaseId === assessmentPhase.get('phaseId').value;
@@ -253,14 +251,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
     }
 
     saveDetails(autoMode = false) {
-        console.log(this.assessmentForm);
-        /* if (1) {
-            console.log(this.assessmentForm.pristine);
-            this.assessmentForm.markAsPristine();
-            console.log(this.assessmentForm.pristine);
-            this.autoSaveStatus = 'saved';
-            return true;
-        } */
         if (this.assessmentForm.valid) {
             const formData: Assessment = this.assessmentForm.value;
             formData.assessmentPhases.forEach((phase, phaseIndex) => {
@@ -272,7 +262,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                 });
                 phase.assessmentPhaseTools = phase.assessmentPhaseTools.filter(Boolean);
             });
-            console.log(formData);
             this.srvAssessment.postAssessment(formData).subscribe(response => {
                 if (response.status === 'success') {
                     if (!autoMode) {

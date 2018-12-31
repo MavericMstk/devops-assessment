@@ -1,4 +1,4 @@
-# Devops Assessment Frontend
+# Devops Assessment Frontend V1
 
 Frontend tool to capture the Devops Assessment details.
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4.

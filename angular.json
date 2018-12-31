@@ -23,7 +23,7 @@
               "src/assets",
               "src/.htaccess",
               "src/appspec.yml",
-              "src/scripts/*"
+              "src/scripts/BeforeInstall.sh"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

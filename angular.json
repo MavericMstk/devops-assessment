@@ -21,7 +21,9 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/.htaccess"
+              "src/.htaccess",
+              "src/appspec.yml",
+              "src/scripts/*"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

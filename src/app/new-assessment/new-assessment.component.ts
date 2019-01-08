@@ -78,7 +78,6 @@ export class NewAssessmentComponent implements OnInit, NgbPanelChangeEvent {
                 this.saveDetails(true);
             }
         });
-        alert("Thanks you!!");
 
 
         this.formDisableStatus.subscribe(status => {

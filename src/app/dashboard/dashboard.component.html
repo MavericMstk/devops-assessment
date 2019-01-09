@@ -1,0 +1,16 @@
+<h1 class="mt-2 text-center">Welcome to DevOps Assessment</h1>
+<div class="text-center"><a class="btn btn-primary text-center mb-2 mt-5 mr-2"  [routerLink]="['/list']">View Projects</a></div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Thank You</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Thanks for watching demo Siddhesh</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

@@ -10,6 +10,7 @@ import { ListAssessmentComponent } from './list-assessment/list-assessment.compo
 import { ViewAssessmentComponent } from './view-assessment/view-assessment.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import { ExportAssessmentComponent } from './export-assessment/export-assessment.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { ExportAssessmentComponent } from './export-assessment/export-assessment
         ListAssessmentComponent,
         ViewAssessmentComponent,
         RecommendationComponent,
-        ExportAssessmentComponent
+        ExportAssessmentComponent,
+        DashboardComponent
     ],
     imports: [
         BrowserModule,
